@@ -109,6 +109,7 @@ define([
                 _setup.destroy();
                 _setup = null;
 
+                _view.replaceOriginalContainer();
                 _view.completeSetup();
 
                 // For 'onCast' callback
@@ -495,6 +496,7 @@ define([
             this.getProvider = function(){ return _model.get('provider'); };
 
             // View passthroughs
+            this.getContainer = _view.getContainer;
             this.resize = _view.resize;
             this.getSafeRegion = _view.getSafeRegion;
             this.forceState = _view.forceState;
@@ -569,6 +571,11 @@ define([
 
             // This is here because it binds to the methods declared above
             deprecateInit(_api, this);
+        },
+        reset: function() {
+            if (this._view) {
+                this._view.reset();
+            }
         }
     };
 
