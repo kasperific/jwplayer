@@ -8,7 +8,6 @@ define([
     'view/display',
     'view/displayicon',
     'view/dock',
-    'view/errorscreen',
     'view/logo',
     'view/controlbar',
     'view/rightclick',
@@ -17,7 +16,7 @@ define([
     'utils/underscore',
     'handlebars-loader!templates/player.html'
 ], function(utils, events, Events, states, CastDisplay,
-            Captions, Display, DisplayIcon, Dock, errorScreen, Logo,
+            Captions, Display, DisplayIcon, Dock, Logo,
             Controlbar, RightClick, Title, cssUtils, _, playerTemplate) {
 
     var _styles = utils.style,
@@ -781,19 +780,13 @@ define([
             utils.emptyElement(_playerElement);
         };
 
-        var _completeSetup = this.completeSetup = function() {
+        this.completeSetup = function() {
             window.addEventListener('beforeunload', function() {
                 if (!_isCasting()) { // don't call stop while casting
                     // prevent video error in display on window close
                     _api.stop();
                 }
             });
-        };
-
-        var _replaceOriginalContainer = this.replaceOriginalContainer = function() {
-            var replace = document.getElementById(_model.id);
-            _originalContainer = replace;
-            replace.parentNode.replaceChild(_playerElement, replace);
         };
 
         /**
@@ -1109,14 +1102,6 @@ define([
             var provider = _model.getVideo();
             provider.setContainer(_videoLayer);
             provider.setVisibility(true);
-        };
-
-        this.setupError = function(message) {
-            _errorState = true;
-            message = message.split(':');
-            errorScreen(_playerElement, message[0], message[1]);
-            _replaceOriginalContainer();
-            _completeSetup();
         };
 
         this.forceControls = function(state) {
