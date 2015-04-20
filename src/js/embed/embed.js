@@ -23,13 +23,6 @@ define([
             _config = new EmbedConfig(options);
             _config.id = _api.id;
 
-            var _container = _api.getContainer(),
-                width = _config.width,
-                height = _config.height;
-
-            _container.style.width = width.toString().indexOf('%') > 0 ? width : (width + 'px');
-            _container.style.height = height.toString().indexOf('%') > 0 ? height : (height + 'px');
-
             _pluginLoader = plugins.loadPlugins(_api.id, _config.plugins);
             _pluginLoader.on(events.COMPLETE, _doEmbed);
             _pluginLoader.on(events.ERROR, _pluginError);
@@ -41,8 +34,11 @@ define([
                 _pluginLoader.destroy();
                 _pluginLoader = null;
             }
-            if (_playlistLoader) {
-                _playlistLoader.resetEventListeners();
+            if (_playlistLoader && _playlistLoader.resetEventListeners) {
+                if(_playlistLoader.resetEventListeners) {
+                    // resetEventListeners does not exist if it is removed via an error on setup
+                    _playlistLoader.resetEventListeners();
+                }
                 _playlistLoader = null;
             }
         };
@@ -162,6 +158,14 @@ define([
 
             _errorOccurred = true;
             errorScreen(_container, message, body);
+
+            var errorScreenElement =_container.getElementsByClassName('jw-error')[0],
+                width = _config.width,
+                height = _config.height;
+
+            errorScreenElement.style.width = width.toString().indexOf('%') > 0 ? width : (width + 'px');
+            errorScreenElement.style.height = height.toString().indexOf('%') > 0 ? height : (height + 'px');
+
             _dispatchSetupError(message + body, true);
         }
 
