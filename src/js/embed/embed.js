@@ -5,9 +5,8 @@ define([
     'playlist/loader',
     'embed/config',
     'plugins/plugins',
-    'view/errorscreen',
     'utils/underscore'
-], function(events, Events, scriptloader, PlaylistLoader, EmbedConfig, plugins, errorScreen, _) {
+], function(events, Events, scriptloader, PlaylistLoader, EmbedConfig, plugins, _) {
 
     var Embed = function(_api) {
 
@@ -127,46 +126,32 @@ define([
 
         function _sourceError(evt) {
             if (evt && evt.message) {
-                _errorScreen('Error loading playlist', evt.message);
+                _dispatchSetupError('Error loading playlist', evt.message);
             } else {
-                _errorScreen('Error loading player: ', 'No playable sources found');
+                _dispatchSetupError('Error loading player: ', 'No playable sources found');
             }
         }
 
-        function _dispatchSetupError(message) {
+        function _dispatchSetupError(message, body) {
             // Throttle this so that it runs once if called twice in the same callstack
-            clearTimeout(_setupErrorTimer);
-            _setupErrorTimer = setTimeout(function() {
-                _api.trigger(events.JWPLAYER_SETUP_ERROR, {
-                    message: message
-                });
-            }, 0);
-        }
-
-        function _errorScreen(message, body) {
             if (_errorOccurred) {
                 return;
             }
 
-            // Put new container in page
-            // TODO: don't assume element with id is in DOM
-            var container = document.getElementById(_api.id);
-            var _container = _api.getContainer();
-            if (container !== _container) {
-                container.parentNode.replaceChild(_container, container);
-            }
-
             _errorOccurred = true;
-            errorScreen(_container, message, body);
 
-            var errorScreenElement =_container.getElementsByClassName('jw-error')[0],
-                width = _config.width,
+            var width = _config.width,
                 height = _config.height;
 
-            errorScreenElement.style.width = width.toString().indexOf('%') > 0 ? width : (width + 'px');
-            errorScreenElement.style.height = height.toString().indexOf('%') > 0 ? height : (height + 'px');
-
-            _dispatchSetupError(message + body, true);
+            clearTimeout(_setupErrorTimer);
+            _setupErrorTimer = setTimeout(function() {
+                _this.trigger(events.JWPLAYER_SETUP_ERROR, {
+                    message: message,
+                    body: body,
+                    width: width.toString().indexOf('%') > 0 ? width : (width + 'px'),
+                    height: height.toString().indexOf('%') > 0 ? height : (height + 'px')
+                });
+            }, 0);
         }
 
         return this;

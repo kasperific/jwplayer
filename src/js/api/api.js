@@ -82,7 +82,7 @@ define([
                 _controller.off();
                 _controller.reset();
             }
-            _controller = new Controller();
+            _controller = new Controller(container);
             actionsInit(_this, _controller);
             mutatorsInit(_this, _controller);
             _controller.on(events.JWPLAYER_PLAYLIST_ITEM, function () {
@@ -153,6 +153,11 @@ define([
             _embedder.on(events.JWPLAYER_READY, function(config) {
                 _controller.setup(config, this);
             }, _this);
+
+            _embedder.on(events.JWPLAYER_SETUP_ERROR, function(evt) {
+                _controller.setupError(evt.message, evt.body, evt.width, evt.height);
+            }, this);
+
             _embedder.embed(options);
 
             return _this;
