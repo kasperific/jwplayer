@@ -30,8 +30,8 @@ define([
         return newstate;
     }
 
-    var Controller = function(container) {
-        this.originalContainer = this.currentContainer = container;
+    var Controller = function(originalContainer) {
+        this.originalContainer = this.currentContainer = originalContainer;
         this.eventsQueue = [];
         _.extend(this, Events);
     };
@@ -503,7 +503,7 @@ define([
             this.getProvider = function(){ return _model.get('provider'); };
 
             // View passthroughs
-            this.getContainer = _view.getContainer;
+            this.getContainer = function(){ return this.currentContainer; };
             this.resize = _view.resize;
             this.getSafeRegion = _view.getSafeRegion;
             this.forceState = _view.forceState;
@@ -581,7 +581,9 @@ define([
         },
 
         showView: function(viewElement){
-            this.currentContainer.parentElement.replaceChild(viewElement, this.currentContainer);
+            if(this.currentContainer.parentElement) {
+                this.currentContainer.parentElement.replaceChild(viewElement, this.currentContainer);
+            }
             this.currentContainer = viewElement;
         },
 
