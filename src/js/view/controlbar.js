@@ -198,8 +198,8 @@ define([
         onPlaylistItem : function(/*model, item*/) {
             this.elements.time.updateBuffer(0);
             this.elements.time.render(0);
-            this.elements.duration.innerHTML = '';
-            this.elements.elapsed.innerHTML = '';
+            this.elements.duration.innerHTML = '00:00';
+            this.elements.elapsed.innerHTML = '00:00';
 
             // Hide the time slider until we know if it is live or not
             utils.addClass(this.elements.time.element(), 'jw-hidden');
