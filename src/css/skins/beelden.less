@@ -16,5 +16,38 @@
 
 		border-radius: @ui-corner-round;
 		bottom: @ui-margin;
+		max-width: @controlbar-max-width;
+		margin: 0 auto;
+	}
+
+	.jw-progress {
+		background: linear-gradient(to bottom, rgb(201, 56, 53) 0, rgb(178, 32, 33) 50%, rgb(128, 54, 55) 100%);;
+		background-color: #c93835;
+	}
+
+	.jw-buffer {
+		background: linear-gradient(to bottom, #7d7d7d 0%, #868686 100%);
+		background-color: #7d7d7d;
+		box-shadow: inset 0 -2px 4px -1px rgba(255,255,255,0.5);
+	}
+
+	.jw-thumb {
+		top: -1px;
+
+		&:after {
+			background-color: #bbb5b7;
+			box-shadow: inset 0 0px 5px 0px rgba(255,255,255,0.5);
+			border: 1px solid #000;
+
+		}
+	}
+
+	.jw-slider-horizontal {
+
+		.jw-cue {
+			&:after {
+				background-color: #fff;
+			}
+		}
 	}
 }
